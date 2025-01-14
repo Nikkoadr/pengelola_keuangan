@@ -26,7 +26,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
     _loadData();
   }
 
-  // Memuat data transaksi dan total pemasukan/pengeluaran
   Future<void> _loadData() async {
     setState(() {
       transaksiList = _databaseHelper.ambilSemuaTransaksi();
@@ -45,14 +44,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     return 0.0;
   }
-
+  
   String formatTanggal(String rawDate) {
     try {
       final date = DateTime.parse(rawDate);
-      return DateFormat('dd MMM yyyy').format(date);
+      return DateFormat('dd MMM yyyy HH:mm').format(date);
     } catch (e) {
       return rawDate;
     }
+  }
+  
+  String formatMataUang(double amount) {
+    final formatter = NumberFormat.simpleCurrency(locale: 'id_ID');
+    return formatter.format(amount);
   }
 
   @override
@@ -60,8 +64,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[100],
       appBar: AppBar(
-        title: const Text('Dashboard Keuangan'),
-        backgroundColor: Colors.blue,
+        title: const Text('Dashboard'),
+        backgroundColor: Colors.blue[500],
       ),
       body: SafeArea(
         child: Padding(
@@ -82,7 +86,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context, snapshot) {
                       final pemasukan = snapshot.data ?? 0.0;
                       return _buildBalanceCard(
-                          'Total Pemasukan', 'Rp ${pemasukan.toStringAsFixed(0)}', Colors.green);
+                          'Total Pemasukan', formatMataUang(pemasukan), Colors.green);
                     },
                   ),
                   FutureBuilder<double>(
@@ -90,7 +94,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context, snapshot) {
                       final pengeluaran = snapshot.data ?? 0.0;
                       return _buildBalanceCard(
-                          'Total Pengeluaran', 'Rp ${pengeluaran.toStringAsFixed(0)}', Colors.red);
+                          'Total Pengeluaran', formatMataUang(pengeluaran), Colors.red);
                     },
                   ),
                 ],
@@ -108,7 +112,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         MaterialPageRoute(
                           builder: (context) => const FormPemasukanScreen(),
                         ),
-                      ).then((_) => _loadData()); // Reload data after returning
+                      ).then((_) => _loadData());
                     },
                   ),
                   _buildActionButton(
@@ -120,7 +124,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         MaterialPageRoute(
                           builder: (context) => const FormPengeluaranScreen(),
                         ),
-                      ).then((_) => _loadData()); // Reload data after returning
+                      ).then((_) => _loadData());
                     },
                   ),
                   _buildActionButton(
@@ -132,7 +136,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         MaterialPageRoute(
                           builder: (context) => const TransaksiScreen(),
                         ),
-                      ).then((_) => _loadData()); // Reload data after returning
+                      ).then((_) => _loadData());
                     },
                   ),
                   _buildActionButton(Icons.receipt_long, 'Rekap', () {
@@ -220,7 +224,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Text(title),
         subtitle: Text(date),
         trailing: Text(
-          'Rp $amount',
+          formatMataUang(amount.toDouble()),
           style: TextStyle(
             color: isExpense ? Colors.red : Colors.green,
             fontWeight: FontWeight.bold,

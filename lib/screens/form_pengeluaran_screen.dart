@@ -55,7 +55,7 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tambah Pengeluaran'),
-        backgroundColor: Colors.red[400],
+        backgroundColor: Colors.red[500],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -102,7 +102,8 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[400],
+                    backgroundColor: Colors.red[400], // Warna latar belakang tombol
+                    foregroundColor: Colors.white, // Warna teks tombol (lebih kontras)
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),

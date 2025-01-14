@@ -119,4 +119,15 @@ class DatabaseHelper {
     final db = await database;
     return db.rawQuery(query, arguments);
   }
+
+  Future<List<Transaksi>> ambilTransaksi12Bulan() async {
+    final db = await database;
+    final String query = '''
+      SELECT * FROM transaksi
+      WHERE strftime('%Y-%m', tanggal) >= strftime('%Y-%m', 'now', '-12 months')
+      ORDER BY strftime('%Y-%m', tanggal) DESC
+    ''';
+    final List<Map<String, dynamic>> maps = await db.rawQuery(query);
+    return maps.map((map) => Transaksi.fromMap(map)).toList();
+  }
 }

@@ -45,6 +45,9 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
         final containerColor = isExpense ? Colors.red[100] : Colors.green[100];
         final textColor = isExpense ? Colors.red[700] : Colors.green[700];
 
+        DateTime tanggalTransaksi = DateTime.parse(transaksi.tanggal);
+        String formattedDate = DateFormat('d MMM yyyy HH:mm').format(tanggalTransaksi);
+
         return Container(
           margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           padding: const EdgeInsets.all(12),
@@ -76,7 +79,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      transaksi.tanggal,
+                      formattedDate,
                       style: const TextStyle(
                         fontSize: 12,
                         color: Colors.grey,
@@ -210,11 +213,12 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaksi'),
+        backgroundColor: Colors.blue[500], // Mengganti warna AppBar menjadi lebih lembut
       ),
       body: _buildTransactionList(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // Navigasi ke tambah transaksi
+          // Add your logic here for adding a transaction
         },
         child: const Icon(Icons.add),
       ),

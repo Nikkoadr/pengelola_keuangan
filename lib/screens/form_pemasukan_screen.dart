@@ -55,7 +55,7 @@ class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Tambah Pemasukan'),
-        backgroundColor: Colors.blue[400],
+        backgroundColor: Colors.blue[500],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -103,6 +103,7 @@ class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blue[400],
+                    foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
