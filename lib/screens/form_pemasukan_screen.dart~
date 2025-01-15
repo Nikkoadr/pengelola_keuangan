@@ -1,30 +1,33 @@
 import 'package:flutter/material.dart';
 import '../db_helper.dart';
 
-class FormPengeluaranScreen extends StatefulWidget {
-  const FormPengeluaranScreen({super.key});
+class FormPemasukanScreen extends StatefulWidget {
+  const FormPemasukanScreen({super.key});
 
   @override
-  State<FormPengeluaranScreen> createState() => _FormPengeluaranScreenState();
+  State<FormPemasukanScreen> createState() => _FormPemasukanScreenState();
 }
 
-class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
+class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
   final _judulController = TextEditingController();
   final _jumlahController = TextEditingController();
+  final _keteranganController = TextEditingController();  // Controller untuk keterangan
   String _tanggal = DateTime.now().toIso8601String();
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
 
-  Future<void> _simpanPengeluaran() async {
+  Future<void> _simpanPemasukan() async {
     final judul = _judulController.text;
     final jumlah = double.tryParse(_jumlahController.text) ?? 0.0;
+    final keterangan = _keteranganController.text;  // Ambil nilai keterangan
 
-    if (judul.isNotEmpty && jumlah > 0) {
+    if (judul.isNotEmpty && jumlah > 0 && keterangan.isNotEmpty) {  // Validasi keterangan
       final transaksiBaru = Transaksi(
         judul: judul,
         jumlah: jumlah,
-        jenis: 'pengeluaran',
+        jenis: 'pemasukan',
         tanggal: _tanggal,
+        keterangan: keterangan,  // Menambahkan keterangan
       );
       await _dbHelper.tambahTransaksi(transaksiBaru);
       Navigator.pop(context);
@@ -54,8 +57,8 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tambah Pengeluaran'),
-        backgroundColor: Colors.red[500],
+        title: const Text('Tambah Pemasukan'),
+        backgroundColor: Colors.blue[500],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
@@ -71,7 +74,7 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
                     style: const TextStyle(fontSize: 16),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.calendar_today, color: Colors.red),
+                    icon: const Icon(Icons.calendar_today, color: Colors.blue),
                     onPressed: _pilihTanggal,
                   ),
                 ],
@@ -80,7 +83,7 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
               TextField(
                 controller: _judulController,
                 decoration: InputDecoration(
-                  labelText: 'Judul Pengeluaran',
+                  labelText: 'Judul Pemasukan',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -97,21 +100,31 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
                   ),
                 ),
               ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: _keteranganController,  // Input field untuk keterangan
+                decoration: InputDecoration(
+                  labelText: 'Keterangan',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+              ),
               const SizedBox(height: 20),
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red[400],
+                    backgroundColor: Colors.blue[400],
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: _simpanPengeluaran,
+                  onPressed: _simpanPemasukan,
                   child: const Text(
-                    'Simpan Pengeluaran',
+                    'Simpan Pemasukan',
                     style: TextStyle(fontSize: 16),
                   ),
                 ),

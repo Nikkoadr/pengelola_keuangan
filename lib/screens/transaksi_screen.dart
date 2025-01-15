@@ -21,7 +21,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
   }
 
   Future<void> _loadTransaksi() async {
-    final data = await _databaseHelper.ambilSemuaTransaksi();
+    final data = await _databaseHelper.ambilTransaksiBulanIni();
     setState(() {
       _transaksiList = data;
     });
@@ -31,7 +31,7 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     if (_transaksiList.isEmpty) {
       return const Center(
         child: Text(
-          'Belum ada transaksi.',
+          'Belum ada transaksi bulan ini.',
           style: TextStyle(color: Colors.grey),
         ),
       );
@@ -213,15 +213,9 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Transaksi'),
-        backgroundColor: Colors.blue[500], // Mengganti warna AppBar menjadi lebih lembut
+        backgroundColor: Colors.blue[500],
       ),
       body: _buildTransactionList(),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Add your logic here for adding a transaction
-        },
-        child: const Icon(Icons.add),
-      ),
     );
   }
 }

@@ -130,4 +130,42 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> maps = await db.rawQuery(query);
     return maps.map((map) => Transaksi.fromMap(map)).toList();
   }
+  Future<List<Transaksi>> ambil10TransaksiTerbaru() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query(
+      'transaksi',
+      orderBy: 'tanggal DESC',
+      limit: 10,
+    );
+    return maps.map((map) => Transaksi.fromMap(map)).toList();
+  }
+  Future<List<Transaksi>> ambilTransaksiBulanIni() async {
+    final db = await database;
+    final now = DateTime.now();
+    final firstDayOfMonth = DateTime(now.year, now.month, 1);
+    final firstDayOfNextMonth = DateTime(now.year, now.month + 1, 1);
+
+    final List<Map<String, dynamic>> result = await db.query(
+      'transaksi',
+      where: 'tanggal >= ? AND tanggal < ?',
+      whereArgs: [firstDayOfMonth.toIso8601String(), firstDayOfNextMonth.toIso8601String()],
+      orderBy: 'tanggal DESC',
+    );
+
+    return result.map((map) => Transaksi.fromMap(map)).toList();
+  }
+  Future<void> hapusTransaksiBulan(String bulan) async {
+    final db = await database;
+    final startOfMonth = '$bulan-01';
+    final endOfMonth = DateTime.parse(startOfMonth)
+        .add(Duration(days: DateTime.parse(startOfMonth).day + 30))
+        .toIso8601String();
+
+    await db.delete(
+      'transaksi',
+      where: 'tanggal >= ? AND tanggal < ?',
+      whereArgs: [startOfMonth, endOfMonth],
+    );
+  }
+
 }

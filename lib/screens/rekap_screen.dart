@@ -2,20 +2,39 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../db_helper.dart';
 
-class RekapScreen extends StatelessWidget {
+class RekapScreen extends StatefulWidget {
   const RekapScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final dbHelper = DatabaseHelper();
+  State<RekapScreen> createState() => _RekapScreenState();
+}
 
+class _RekapScreenState extends State<RekapScreen> {
+  late DatabaseHelper _dbHelper;
+  Future<List<Transaksi>>? _rekapData;
+
+  @override
+  void initState() {
+    super.initState();
+    _dbHelper = DatabaseHelper();
+    _loadRekapData();
+  }
+
+  void _loadRekapData() {
+    setState(() {
+      _rekapData = _dbHelper.ambilTransaksi12Bulan();
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Rekap Keuangan'),
         backgroundColor: Colors.blue[500],
       ),
       body: FutureBuilder<List<Transaksi>>(
-        future: dbHelper.ambilTransaksi12Bulan(),
+        future: _rekapData,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
@@ -68,7 +87,8 @@ class RekapScreen extends StatelessWidget {
                 warnaPesan = Colors.grey;
               }
 
-              String formattedMonth = DateFormat('MMM yyyy').format(DateTime.parse('$bulan-01'));
+              String formattedMonth =
+              DateFormat('MMM yyyy').format(DateTime.parse('$bulan-01'));
 
               String formatCurrency(double amount) {
                 final formatter = NumberFormat.simpleCurrency(locale: 'id_ID');
@@ -89,12 +109,46 @@ class RekapScreen extends StatelessWidget {
                     ],
                   ),
                   leading: const Icon(Icons.calendar_today),
+                  trailing: IconButton(
+                    icon: const Icon(Icons.delete, color: Colors.red),
+                    onPressed: () {
+                      _showDeleteConfirmation(context, bulan);
+                    },
+                  ),
                 ),
               );
             }).toList(),
           );
         },
       ),
+    );
+  }
+
+  void _showDeleteConfirmation(BuildContext context, String bulan) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Hapus Data Bulan Ini'),
+          content: Text('Apakah Anda yakin ingin menghapus semua data di bulan $bulan?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () async {
+                await _dbHelper.hapusTransaksiBulan(bulan);
+                Navigator.of(context).pop(); // Tutup dialog
+                _loadRekapData(); // Refresh data
+              },
+              child: const Text('Ya', style: TextStyle(color: Colors.red)),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Batal'),
+            ),
+          ],
+        );
+      },
     );
   }
 }

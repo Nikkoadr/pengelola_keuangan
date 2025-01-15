@@ -28,7 +28,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<void> _loadData() async {
     setState(() {
-      transaksiList = _databaseHelper.ambilSemuaTransaksi();
+      transaksiList = _databaseHelper.ambil10TransaksiTerbaru();
       totalPemasukan = _hitungTotal('pemasukan');
       totalPengeluaran = _hitungTotal('pengeluaran');
     });
@@ -36,7 +36,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   Future<double> _hitungTotal(String jenis) async {
     final result = await _databaseHelper.rawQuery(
-      'SELECT SUM(jumlah) as total FROM transaksi WHERE jenis = ?',
+      'SELECT SUM(jumlah) as total FROM transaksi WHERE jenis = ? AND strftime("%Y-%m", tanggal) = strftime("%Y-%m", "now")',
       [jenis],
     );
     if (result.isNotEmpty) {
@@ -44,7 +44,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     }
     return 0.0;
   }
-  
+
   String formatTanggal(String rawDate) {
     try {
       final date = DateTime.parse(rawDate);
@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       return rawDate;
     }
   }
-  
+
   String formatMataUang(double amount) {
     final formatter = NumberFormat.simpleCurrency(locale: 'id_ID');
     return formatter.format(amount);
@@ -86,7 +86,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context, snapshot) {
                       final pemasukan = snapshot.data ?? 0.0;
                       return _buildBalanceCard(
-                          'Total Pemasukan', formatMataUang(pemasukan), Colors.green);
+                        'Total Pemasukan',
+                        formatMataUang(pemasukan),
+                        Colors.green,
+                      );
                     },
                   ),
                   FutureBuilder<double>(
@@ -94,7 +97,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     builder: (context, snapshot) {
                       final pengeluaran = snapshot.data ?? 0.0;
                       return _buildBalanceCard(
-                          'Total Pengeluaran', formatMataUang(pengeluaran), Colors.red);
+                        'Total Pengeluaran',
+                        formatMataUang(pengeluaran),
+                        Colors.red,
+                      );
                     },
                   ),
                 ],
@@ -139,19 +145,23 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       ).then((_) => _loadData());
                     },
                   ),
-                  _buildActionButton(Icons.receipt_long, 'Rekap', () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const RekapScreen(),
-                      ),
-                    );
-                  }),
+                  _buildActionButton(
+                    Icons.receipt_long,
+                    'Rekap',
+                        () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const RekapScreen(),
+                        ),
+                      ).then((_) => _loadData());
+                    },
+                  ),
                 ],
               ),
               const SizedBox(height: 30),
               const Text(
-                'Transaksi Terakhir',
+                'History',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 16),
