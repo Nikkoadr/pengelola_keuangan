@@ -11,7 +11,6 @@ class FormPemasukanScreen extends StatefulWidget {
 class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
   final _judulController = TextEditingController();
   final _jumlahController = TextEditingController();
-  final _keteranganController = TextEditingController();  // Tambahkan controller untuk keterangan
   String _tanggal = DateTime.now().toIso8601String();
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -19,15 +18,13 @@ class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
   Future<void> _simpanPemasukan() async {
     final judul = _judulController.text;
     final jumlah = double.tryParse(_jumlahController.text) ?? 0.0;
-    final keterangan = _keteranganController.text;  // Ambil keterangan dari controller
 
-    if (judul.isNotEmpty && jumlah > 0 && keterangan.isNotEmpty) {
+    if (judul.isNotEmpty && jumlah > 0) {
       final transaksiBaru = Transaksi(
         judul: judul,
         jumlah: jumlah,
         jenis: 'pemasukan',
         tanggal: _tanggal,
-        keterangan: keterangan,  // Sertakan keterangan saat membuat transaksi baru
       );
       await _dbHelper.tambahTransaksi(transaksiBaru);
       Navigator.pop(context);
@@ -95,16 +92,6 @@ class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
                 keyboardType: TextInputType.number,
                 decoration: InputDecoration(
                   labelText: 'Jumlah',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              TextField(
-                controller: _keteranganController,  // Kolom untuk keterangan
-                decoration: InputDecoration(
-                  labelText: 'Keterangan',
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),

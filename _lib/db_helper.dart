@@ -8,7 +8,6 @@ class Transaksi {
   final double jumlah;
   final String jenis;
   final String tanggal;
-  final String keterangan;
 
   Transaksi({
     this.id,
@@ -16,7 +15,6 @@ class Transaksi {
     required this.jumlah,
     required this.jenis,
     required this.tanggal,
-    required this.keterangan,
   });
 
   // Convert Transaksi object to Map
@@ -27,7 +25,6 @@ class Transaksi {
       'jumlah': jumlah,
       'jenis': jenis,
       'tanggal': tanggal,
-      'keterangan': keterangan,
     };
   }
 
@@ -39,13 +36,12 @@ class Transaksi {
       jumlah: (map['jumlah'] as num).toDouble(),
       jenis: map['jenis'],
       tanggal: map['tanggal'],
-      keterangan: map['keterangan'],
     );
   }
 
   @override
   String toString() {
-    return 'Transaksi{id: $id, judul: $judul, jumlah: $jumlah, jenis: $jenis, tanggal: $tanggal, keterangan: $keterangan}';
+    return 'Transaksi{id: $id, judul: $judul, jumlah: $jumlah, jenis: $jenis, tanggal: $tanggal}';
   }
 }
 
@@ -73,21 +69,15 @@ class DatabaseHelper {
   }
 
   Future<void> _createDB(Database db, int version) async {
-    await db.execute('''CREATE TABLE transaksi (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      judul TEXT NOT NULL,
-      jumlah REAL NOT NULL,
-      jenis TEXT NOT NULL,
-      tanggal TEXT NOT NULL,
-      keterangan TEXT NOT NULL
-    )''');
-  }
-
-  Future<bool> _tableExists(Database db, String tableName) async {
-    final result = await db.rawQuery(
-        "SELECT name FROM sqlite_master WHERE type='table' AND name = ?",
-        [tableName]);
-    return result.isNotEmpty;
+    await db.execute('''
+      CREATE TABLE transaksi (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        judul TEXT NOT NULL,
+        jumlah REAL NOT NULL,
+        jenis TEXT NOT NULL,
+        tanggal TEXT NOT NULL
+      )
+    ''');
   }
 
   Future<List<Transaksi>> ambilSemuaTransaksi() async {
@@ -140,7 +130,6 @@ class DatabaseHelper {
     final List<Map<String, dynamic>> maps = await db.rawQuery(query);
     return maps.map((map) => Transaksi.fromMap(map)).toList();
   }
-
   Future<List<Transaksi>> ambil10TransaksiTerbaru() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query(
@@ -150,7 +139,6 @@ class DatabaseHelper {
     );
     return maps.map((map) => Transaksi.fromMap(map)).toList();
   }
-
   Future<List<Transaksi>> ambilTransaksiBulanIni() async {
     final db = await database;
     final now = DateTime.now();
@@ -166,7 +154,6 @@ class DatabaseHelper {
 
     return result.map((map) => Transaksi.fromMap(map)).toList();
   }
-
   Future<void> hapusTransaksiBulan(String bulan) async {
     final db = await database;
     final startOfMonth = '$bulan-01';
@@ -180,4 +167,5 @@ class DatabaseHelper {
       whereArgs: [startOfMonth, endOfMonth],
     );
   }
+
 }

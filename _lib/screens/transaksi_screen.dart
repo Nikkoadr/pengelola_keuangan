@@ -85,14 +85,6 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                         color: Colors.grey,
                       ),
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      'Keterangan: ${transaksi.keterangan}',  // Tampilkan keterangan
-                      style: const TextStyle(
-                        fontSize: 12,
-                        color: Colors.grey,
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -136,8 +128,6 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
     TextEditingController(text: transaksi.jumlah.toString());
     final TextEditingController tanggalController =
     TextEditingController(text: transaksi.tanggal);
-    final TextEditingController keteranganController =
-    TextEditingController(text: transaksi.keterangan);  // Tambahkan controller untuk keterangan
 
     showDialog(
       context: context,
@@ -160,10 +150,6 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                 controller: tanggalController,
                 decoration: const InputDecoration(labelText: 'Tanggal'),
               ),
-              TextField(
-                controller: keteranganController,  // Tambahkan input keterangan
-                decoration: const InputDecoration(labelText: 'Keterangan'),
-              ),
             ],
           ),
           actions: <Widget>[
@@ -175,7 +161,6 @@ class _TransaksiScreenState extends State<TransaksiScreen> {
                   jumlah: double.parse(jumlahController.text),
                   jenis: transaksi.jenis,
                   tanggal: tanggalController.text,
-                  keterangan: keteranganController.text,  // Simpan keterangan yang baru
                 );
                 _databaseHelper.updateTransaksi(updatedTransaksi);
                 Navigator.of(context).pop();
