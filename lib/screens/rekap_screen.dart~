@@ -106,7 +106,7 @@ class _RekapScreenState extends State<RekapScreen> {
                     children: [
                       Text('Pemasukan: ${formatCurrency(totalPemasukanBulan)}'),
                       Text('Pengeluaran: ${formatCurrency(totalPengeluaranBulan)}'),
-                      Text('Saldo Utama: ${formatCurrency(selisih)}',
+                      Text('Selisih: ${formatCurrency(selisih)}',
                           style: TextStyle(
                               color: selisih < 0 ? Colors.red : Colors.green,
                               fontWeight: FontWeight.bold)),

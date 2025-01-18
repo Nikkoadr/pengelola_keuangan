@@ -104,7 +104,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Selisih',
+                          'Saldo Utama',
                           style: TextStyle(
                             fontSize: 14,
                             color: isSurplus ? Colors.green : Colors.red,
