@@ -73,13 +73,15 @@ class _RekapScreenState extends State<RekapScreen> {
                 }
               }
 
+              double selisih = totalPemasukanBulan - totalPengeluaranBulan;
+
               String pesan = '';
               Color warnaPesan = Colors.black;
 
-              if (totalPengeluaranBulan > totalPemasukanBulan) {
+              if (selisih < 0) {
                 pesan = 'Pengeluaran lebih besar dari pemasukan! Harap lebih berhati-hati.';
                 warnaPesan = Colors.red;
-              } else if (totalPemasukanBulan > totalPengeluaranBulan) {
+              } else if (selisih > 0) {
                 pesan = 'Pemasukan lebih besar dari pengeluaran. Bagus!';
                 warnaPesan = Colors.green;
               } else {
@@ -104,6 +106,10 @@ class _RekapScreenState extends State<RekapScreen> {
                     children: [
                       Text('Pemasukan: ${formatCurrency(totalPemasukanBulan)}'),
                       Text('Pengeluaran: ${formatCurrency(totalPengeluaranBulan)}'),
+                      Text('Selisih: ${formatCurrency(selisih)}',
+                          style: TextStyle(
+                              color: selisih < 0 ? Colors.red : Colors.green,
+                              fontWeight: FontWeight.bold)),
                       if (pesan.isNotEmpty)
                         Text(pesan, style: TextStyle(color: warnaPesan)),
                     ],

@@ -86,45 +86,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               const SizedBox(height: 20),
-              FutureBuilder<double>(
-                future: selisih,
-                builder: (context, snapshot) {
-                  final selisihValue = snapshot.data ?? 0.0;
-                  final isSurplus = selisihValue >= 0;
-                  return Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(16),
-                    decoration: BoxDecoration(
-                      color: isSurplus
-                          ? Colors.green.withOpacity(0.1)
-                          : Colors.red.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Selisih',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: isSurplus ? Colors.green : Colors.red,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          formatMataUang(selisihValue),
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: isSurplus ? Colors.green : Colors.red,
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
-              const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -151,6 +112,19 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     },
                   ),
                 ],
+              ),
+              const SizedBox(height: 20),
+              FutureBuilder<double>(
+                future: selisih,
+                builder: (context, snapshot) {
+                  final selisihValue = snapshot.data ?? 0.0;
+                  final isSurplus = selisihValue >= 0;
+                  return _buildBalanceCard(
+                    'Selisih',
+                    formatMataUang(selisihValue),
+                    isSurplus ? Colors.green : Colors.red,
+                  );
+                },
               ),
               const SizedBox(height: 20),
               Row(
@@ -247,24 +221,22 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   Widget _buildBalanceCard(String title, String amount, Color color) {
-    return Expanded(
-      child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 8),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title, style: TextStyle(color: color, fontSize: 14)),
-            const SizedBox(height: 8),
-            Text(amount,
-                style: TextStyle(
-                    color: color, fontSize: 20, fontWeight: FontWeight.bold)),
-          ],
-        ),
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: TextStyle(color: color, fontSize: 14)),
+          const SizedBox(height: 8),
+          Text(amount,
+              style: TextStyle(
+                  color: color, fontSize: 20, fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }
