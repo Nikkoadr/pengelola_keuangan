@@ -11,7 +11,7 @@ class FormPengeluaranScreen extends StatefulWidget {
 class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
   final _judulController = TextEditingController();
   final _jumlahController = TextEditingController();
-  final _keteranganController = TextEditingController();  // Tambahkan controller untuk keterangan
+  final _keteranganController = TextEditingController();
   String _tanggal = DateTime.now().toIso8601String();
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -19,7 +19,7 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
   Future<void> _simpanPengeluaran() async {
     final judul = _judulController.text;
     final jumlah = double.tryParse(_jumlahController.text) ?? 0.0;
-    final keterangan = _keteranganController.text;  // Ambil keterangan dari controller
+    final keterangan = _keteranganController.text;
 
     if (judul.isNotEmpty && jumlah > 0 && keterangan.isNotEmpty) {
       final transaksiBaru = Transaksi(
@@ -27,7 +27,7 @@ class _FormPengeluaranScreenState extends State<FormPengeluaranScreen> {
         jumlah: jumlah,
         jenis: 'pengeluaran',
         tanggal: _tanggal,
-        keterangan: keterangan,  // Sertakan keterangan saat membuat transaksi baru
+        keterangan: keterangan,
       );
       await _dbHelper.tambahTransaksi(transaksiBaru);
       Navigator.pop(context);

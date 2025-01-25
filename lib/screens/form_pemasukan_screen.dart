@@ -102,7 +102,7 @@ class _FormPemasukanScreenState extends State<FormPemasukanScreen> {
               ),
               const SizedBox(height: 16),
               TextField(
-                controller: _keteranganController,  // Kolom untuk keterangan
+                controller: _keteranganController,
                 decoration: InputDecoration(
                   labelText: 'Keterangan',
                   border: OutlineInputBorder(

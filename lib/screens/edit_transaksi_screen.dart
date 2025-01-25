@@ -13,7 +13,7 @@ class EditTransaksiScreen extends StatefulWidget {
 class _EditTransaksiScreenState extends State<EditTransaksiScreen> {
   late TextEditingController _judulController;
   late TextEditingController _jumlahController;
-  late TextEditingController _keteranganController;  // Tambahkan controller untuk keterangan
+  late TextEditingController _keteranganController;
   late String _jenis;
 
   final DatabaseHelper _dbHelper = DatabaseHelper();
@@ -23,14 +23,14 @@ class _EditTransaksiScreenState extends State<EditTransaksiScreen> {
     super.initState();
     _judulController = TextEditingController(text: widget.transaksi.judul);
     _jumlahController = TextEditingController(text: widget.transaksi.jumlah.toString());
-    _keteranganController = TextEditingController(text: widget.transaksi.keterangan); // Mengambil keterangan
+    _keteranganController = TextEditingController(text: widget.transaksi.keterangan);
     _jenis = widget.transaksi.jenis;
   }
 
   Future<void> _updateTransaksi() async {
     final judul = _judulController.text;
     final jumlah = double.tryParse(_jumlahController.text) ?? 0.0;
-    final keterangan = _keteranganController.text;  // Ambil keterangan dari controller
+    final keterangan = _keteranganController.text;
 
     if (judul.isNotEmpty && jumlah > 0 && keterangan.isNotEmpty) {
       final transaksiUpdated = Transaksi(
@@ -39,7 +39,7 @@ class _EditTransaksiScreenState extends State<EditTransaksiScreen> {
         jumlah: jumlah,
         jenis: _jenis,
         tanggal: widget.transaksi.tanggal,
-        keterangan: keterangan,  // Sertakan keterangan yang sudah diperbarui
+        keterangan: keterangan,
       );
       await _dbHelper.updateTransaksi(transaksiUpdated);  // Update transaksi
       Navigator.pop(context, transaksiUpdated);  // Kembali dengan transaksi yang sudah diperbarui
